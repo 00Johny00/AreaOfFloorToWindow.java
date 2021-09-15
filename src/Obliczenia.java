@@ -21,8 +21,6 @@ public class Obliczenia  extends JFrame{
     private JLabel field;
     private JButton usuńOknoButton;
     private JLabel stworzoneOkna;
-    double powierzchniaPodlogi;
-
     Obliczenia() {
         this.setVisible(true);
         this.getContentPane().add(mainPanel);
@@ -46,25 +44,25 @@ public class Obliczenia  extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 System.out.println(textField1.getText()); //Sprawdzamy teksty na konsoli
                 System.out.println(textField3.getText());
-                double a = Double.parseDouble(textField1.getText()); //Konwesrja Stringów na Double
-                double b = Double.parseDouble(textField3.getText());
-                powierzchniaPodlogi = a*b*8; // wysokosc okna * szerokosc * wartość normowana
-                wynik.setText(okrajanieZer.format(powierzchniaPodlogi) + "m2");  // ustawiamy wynik taki jak wyniczek
+                BigDecimal a = new BigDecimal (Double.parseDouble(textField1.getText())); //Konwesrja Stringów na Double
+                BigDecimal b = new BigDecimal (Double.parseDouble(textField3.getText())); //Konwesrja Stringów na Double
+                BigDecimal powierzchniaPodlogi = a.mulitply(b).multiply(8);   //a*b*8; wysokosc okna * szerokosc * wartość normowana
+                wynik.setText(okrajanieZer.format(powierzchniaPodlogi) + "m2");  // ustawiamy wynik taki jak wyniczek // Sprawdzić czy po zmianie na Big formatujez zer nie potrzebnych tak samo
                 System.out.println("WYNIK : " + wynik.getText()); // Wyrzucamy sobie wynik na konsole do wglądu
 
             }
 
         });
 
-        double[] oknoWysokosc = new double[10];
-        double[] oknoSzerokosc = new double[10];
+        double[] oknoWysokosc = new double[10]; // Zrobić ArrayList  : List<String> oknoWysokosc = new ArrayList<>(100);
+        double[] oknoSzerokosc = new double[10]; //List<String> oknoSzerokosc = new ArrayList<>(100);
         dodajOkno.addKeyListener(new KeyAdapter() {
         });
         dodajOkno.addActionListener(new ActionListener() {
            int i=1;
             @Override
             public void actionPerformed(ActionEvent e) {
-                oknoSzerokosc[i] = Double.parseDouble(textField1.getText()); //Konwesrja Stringów na Double
+                oknoSzerokosc[i] = Double.parseDouble(textField1.getText()); //Tutaj teraz nie potrzebne dodawanie do indeksu tylko .add(oknoWysokosc(textField1.getText());
                 System.out.println(oknoSzerokosc[i]);
                 oknoWysokosc [i] = Double.parseDouble(textField3.getText());
                 System.out.println(oknoWysokosc[i]);
