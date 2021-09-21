@@ -1,91 +1,94 @@
 import javax.swing.*;
+import javax.swing.plaf.SeparatorUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 
-public class Obliczenia  extends JFrame{
-    private JTabbedPane tabbedPane1;
-    private JTextField textField1;
-    private JTextField textField3;
-    private JButton button1;
-    private JLabel wynik;
-    private JPanel podlogaPanel;
-    private JButton button2;
-    private JPanel oknaPanel;
-    private JPanel mainPanel;
-    private JButton dodajOkno;
-    private JLabel field;
-    private JButton usuńOknoButton;
-    private JLabel stworzoneOkna;
-    double powierzchniaPodlogi;
+public class ObliczaniePolaPowierzchni extends JFrame {
 
-    Obliczenia() {
+    ObliczaniePolaPowierzchni()
+    {
         this.setVisible(true);
-        this.getContentPane().add(mainPanel);
-        pack();
-
-        textField1.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                super.keyTyped(e);
-            }
-        });
-        textField3.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                super.keyTyped(e);
-            }
-        });
-
-        button1.addActionListener(new ActionListener() {
+        this.getContentPane().add(glownyPanel);
+        glownyPanel.add(przyciskDodajOkno);
+        glownyPanel.add(przyciskUsuńOkno);
+        glownyPanel.add(Oblicz);
+        glownyPanel.add(pobierzSzerokosc);
+        glownyPanel.add(pobierzWysokosc);
+        glownyPanel.add(wynikPowierzchni);
+        this.setDefaultCloseOperation(3);
+        this.setBounds(300,300,300,300);
+        this.setLayout(new GridLayout(5,5));
+        przyciskDodajOkno.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(textField1.getText()); //Sprawdzamy teksty na konsoli
-                System.out.println(textField3.getText());
-                double a = Double.parseDouble(textField1.getText()); //Konwesrja Stringów na Double
-                double b = Double.parseDouble(textField3.getText());
-                powierzchniaPodlogi = a*b*8; // wysokosc okna * szerokosc * wartość normowana
-                wynik.setText(okrajanieZer.format(powierzchniaPodlogi) + "m2");  // ustawiamy wynik taki jak wyniczek
-                System.out.println("WYNIK : " + wynik.getText()); // Wyrzucamy sobie wynik na konsole do wglądu
-
+                szerokoscOkna.add(BigDecimal.valueOf(Double.valueOf(pobierzSzerokosc.getText())));
+                wysokoscOkna.add(BigDecimal.valueOf(Double.valueOf(pobierzWysokosc.getText())));
+                System.out.println(szerokoscOkna);
+                int i = szerokoscOkna.size()-1;
+                JLabel wyswietlOkno = new JLabel("Okno nr " + i + ":" + szerokoscOkna.get(i) + "m2 " + wysokoscOkna.get(i) + "m2 ");
+                glownyPanel.add(wyswietlOkno);
+                pack();
             }
-
         });
-
-        double[] oknoWysokosc = new double[10];
-        double[] oknoSzerokosc = new double[10];
-        dodajOkno.addKeyListener(new KeyAdapter() {
-        });
-        dodajOkno.addActionListener(new ActionListener() {
-           int i=1;
+        przyciskUsuńOkno.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                oknoSzerokosc[i] = Double.parseDouble(textField1.getText()); //Konwesrja Stringów na Double
-                System.out.println(oknoSzerokosc[i]);
-                oknoWysokosc [i] = Double.parseDouble(textField3.getText());
-                System.out.println(oknoWysokosc[i]);
-                dodajOknoDoListy(oknoSzerokosc[i],oknoWysokosc[i]);
-                 i++;
-                    System.out.println(stworzoneOkna.getText());
-            }
 
-            public void dodajOknoDoListy(double szer, double wys)
+                int iloscOkien = szerokoscOkna.size()-1;
+                System.out.println(iloscOkien);
+                BigDecimal czyOstatniaToZero = szerokoscOkna.get(iloscOkien);
+                System.out.println(czyOstatniaToZero);
+                if (iloscOkien == 0)
+                {
+                    JOptionPane.showMessageDialog(null, "DAJ SPOKÓJ TYM OKNOM ICH JUŻ NIE MA!");
+                }
+                else {
+                    if (!czyOstatniaToZero.equals(0)) {
+                        szerokoscOkna.remove(iloscOkien);
+                        wysokoscOkna.remove(iloscOkien);
+                        iloscOkien--;
+                        
+                        } else czyOstatniaToZero.subtract(BigDecimal.ONE);
+                    System.out.println(szerokoscOkna);
+                }
+            }
+        });
+
+    Oblicz.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            BigDecimal wynik = new BigDecimal(0);
+
+           for(int i=0; i < szerokoscOkna.size(); i++)
             {
-                JLabel noweOkno = new JLabel("Szerokość: " + oknoSzerokosc[i] + "m2" + "Wysokość: " + oknoWysokosc[i] + "m2");
-                mainPanel.add(noweOkno);
-
+                wynik = szerokoscOkna.get(i).multiply(wysokoscOkna.get(i)).multiply(wartośćMnożeniaPowierzchni).add(wynik);
+                System.out.println(wynik);
             }
-
-        });
+           wynikPowierzchni.setText("Powierzchnia podłogi jaką możesz stworzyć to: " + wynik + "m2");
+        }
+    });
 
     }
-    DecimalFormat okrajanieZer = new DecimalFormat("0.0#"); //Do zaokrąglenia do 2 znaczących
+    JPanel glownyPanel = new JPanel();
+    JButton przyciskDodajOkno = new JButton("Dodaj Okno");
+    JButton przyciskUsuńOkno = new JButton("Usuń Okno");
+    JButton Oblicz = new JButton("Oblicz");
+    JTextField pobierzSzerokosc = new JTextField(15);
+    JTextField pobierzWysokosc = new JTextField(15);
+    JTextArea wynikPowierzchni = new JTextArea();
+
+
+   ArrayList<BigDecimal> szerokoscOkna = new ArrayList<>();
+   ArrayList<BigDecimal> wysokoscOkna = new ArrayList<>();
+   final BigDecimal wartośćMnożeniaPowierzchni = new BigDecimal(8);
+
+
 
     public static void main(String[] args) {
-        new Obliczenia();
+        new ObliczaniePolaPowierzchni();
     }
 }
