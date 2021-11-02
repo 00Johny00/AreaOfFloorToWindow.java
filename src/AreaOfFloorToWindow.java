@@ -8,17 +8,16 @@ import java.util.ArrayList;
 
 public class AreaOfFloorToWindow extends JFrame {
 
-    AreaOfFloorToWindow()
-    {
+    AreaOfFloorToWindow() {
         this.setVisible(true);
-        this.setBounds(300,600,1000,400);
-        this.setLayout(new GridLayout(3,3));
-        this.getContentPane().add(buttonAddWindow,BorderLayout.SOUTH);
-        this.getContentPane().add(buttonDeleteWindow,BorderLayout.SOUTH);
-        this.getContentPane().add(buttonCalculate,BorderLayout.SOUTH);
-        this.getContentPane().add(getWidth,BorderLayout.NORTH);
-        this.getContentPane().add(getHeight,BorderLayout.NORTH);
-        this.getContentPane().add(result,BorderLayout.CENTER);
+        this.setBounds(300, 600, 1000, 400);
+        this.setLayout(new GridLayout(3, 3));
+        this.getContentPane().add(buttonAddWindow, BorderLayout.SOUTH);
+        this.getContentPane().add(buttonDeleteWindow, BorderLayout.SOUTH);
+        this.getContentPane().add(buttonCalculate, BorderLayout.SOUTH);
+        this.getContentPane().add(getWidth, BorderLayout.NORTH);
+        this.getContentPane().add(getHeight, BorderLayout.NORTH);
+        this.getContentPane().add(result, BorderLayout.CENTER);
         this.getContentPane().add(mainPanel);
         SwingUtilities.updateComponentTreeUI(this);
         this.setDefaultCloseOperation(3);
@@ -30,8 +29,12 @@ public class AreaOfFloorToWindow extends JFrame {
                 if (!(zn >= '0' && zn <= '9' || zn == '.'))
                     e.consume();
             }
-            public void keyPressed(KeyEvent e) {}
-            public void keyReleased(KeyEvent e) {}
+
+            public void keyPressed(KeyEvent e) {
+            }
+
+            public void keyReleased(KeyEvent e) {
+            }
         });
 
         getHeight.addKeyListener(new KeyListener() {
@@ -41,8 +44,12 @@ public class AreaOfFloorToWindow extends JFrame {
                 if (!(zn >= '0' && zn <= '9' || zn == '.'))
                     e.consume();
             }
-            public void keyPressed(KeyEvent e) {}
-            public void keyReleased(KeyEvent e) {}
+
+            public void keyPressed(KeyEvent e) {
+            }
+
+            public void keyReleased(KeyEvent e) {
+            }
         });
 
         buttonAddWindow.addActionListener(new ActionListener() {
@@ -52,16 +59,12 @@ public class AreaOfFloorToWindow extends JFrame {
                 widthWindow.add(BigDecimal.valueOf(Double.valueOf(getWidth.getText())));
                 heightWindow.add(BigDecimal.valueOf(Double.valueOf(getHeight.getText())));
                 System.out.println(widthWindow);
-                for(int i = 0; i < widthWindow.size(); i++) {
-                        JLabel showWindows = new JLabel("Window number " + i + "  Width: " + widthWindow.get(i) + "m  Heigh: " + heightWindow.get(i) + "m");
-                        mainPanel.setVisible(true);
-                        mainPanel.add(showWindows);
-                }
+                showWindows();
                 applicationRefresh();
+
             }
 
         });
-
 
 
         buttonDeleteWindow.addActionListener(new ActionListener() {
@@ -69,20 +72,14 @@ public class AreaOfFloorToWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int windowNumber = widthWindow.size();
                 int windowIndex = windowNumber - 1;
-                if (windowNumber == 0)
-                {
+                if (windowNumber == 0) {
                     JOptionPane.showMessageDialog(null, "You can not delete more windows");
-                }
-                else {
-                        mainPanel.removeAll();
-                        widthWindow.remove(windowIndex);
-                        heightWindow.remove(windowIndex);
-                        for (int i = 0; i < windowIndex; i++) {
-                            JLabel showWindows = new JLabel("Window number " + i + "  Width: " + widthWindow.get(i) + "m  Heigh: " + heightWindow.get(i) + "m");
-                            mainPanel.setVisible(true);
-                            mainPanel.add(showWindows);
-                        }
-                        applicationRefresh();
+                } else {
+                    mainPanel.removeAll();
+                    widthWindow.remove(windowIndex);
+                    heightWindow.remove(windowIndex);
+                    showWindows();
+                    applicationRefresh();
                 }
             }
         });
@@ -93,8 +90,7 @@ public class AreaOfFloorToWindow extends JFrame {
 
                 BigDecimal resultParameter = new BigDecimal(0);
 
-                for(int i = 0; i < widthWindow.size(); i++)
-                {
+                for (int i = 0; i < widthWindow.size(); i++) {
                     resultParameter = widthWindow.get(i).multiply(heightWindow.get(i)).multiply((PARAMETER_OF_MULIPLY_SQUARE).add(resultParameter));
                     System.out.println(resultParameter);
                 }
@@ -103,6 +99,14 @@ public class AreaOfFloorToWindow extends JFrame {
         });
 
 
+    }
+    public void showWindows()
+    {
+        for (int i = 0; i < (widthWindow.size()); i++) {
+            JLabel showWindows = new JLabel("Window number " + i + "  Width: " + widthWindow.get(i) + "m  Heigh: " + heightWindow.get(i) + "m");
+            mainPanel.setVisible(true);
+            mainPanel.add(showWindows);
+        }
     }
     public void applicationRefresh()
     {
